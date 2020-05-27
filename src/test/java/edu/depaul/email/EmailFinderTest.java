@@ -119,11 +119,42 @@ class EmailFinderTest {
     File file2 = new File(GOODLINKS_PATH);
     File file3 = new File(EMAIL_PATH);
 
+    Long aLong;
+
     assertAll(
       () -> assertTrue(file1.exists(), BADLINKS_PATH + " not found"),
       () -> assertTrue(file2.exists(), GOODLINKS_PATH + " not found"),
       () -> assertTrue(file3.exists(), EMAIL_PATH + " not found")
     );
+  }
+
+  @Test
+  @DisplayName("Tests performance of EmailFinder end-to-end")
+  void testPerformance() {
+    cleanStorage();
+
+    long start;
+    long end;
+    long elapsed;
+    long total = 0L;
+    long maxTime = 5000L;  // Maximum time is 5 seconds
+    int passes = 10;
+
+    EmailFinder finder = new EmailFinder();
+    String[] args = {URL};
+
+    // Perform multiple passes and check average time
+    for (int i = 0; i != passes; i++) {
+      start = System.currentTimeMillis();
+      finder.run(args);
+      end = System.currentTimeMillis();
+      elapsed = end - start;
+      total = total + elapsed;
+    }
+
+    long average = total / passes;
+
+    assertTrue(average < maxTime);
   }
 
 }

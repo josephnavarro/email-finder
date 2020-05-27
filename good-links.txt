@@ -1,0 +1,3 @@
+src\test\resources\test-7.html
+C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-2.html
+C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-3.html
