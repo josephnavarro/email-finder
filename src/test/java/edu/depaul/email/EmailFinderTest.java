@@ -3,15 +3,127 @@ package edu.depaul.email;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EmailFinderTest {
+  private static final String EMAIL_PATH = "email.txt";
+  private static final String BADLINKS_PATH = "badlinks.txt";
+  private static final String GOODLINKS_PATH = "good-links.txt";
+  private static final String URL = "src\\test\\resources\\test-7.html";
+
+  private void cleanStorage() {
+    try {
+      Files.deleteIfExists(Paths.get(EMAIL_PATH));
+    } catch (NoSuchFileException e) {
+      System.out.println("No such file/directory exists");
+    } catch (DirectoryNotEmptyException e) {
+      System.out.println("Directory is not empty.");
+    } catch (IOException e) {
+      System.out.println("Invalid permissions.");
+    }
+
+    try {
+      Files.deleteIfExists(Paths.get(BADLINKS_PATH));
+    } catch (NoSuchFileException e) {
+      System.out.println("No such file/directory exists");
+    } catch (DirectoryNotEmptyException e) {
+      System.out.println("Directory is not empty.");
+    } catch (IOException e) {
+      System.out.println("Invalid permissions.");
+    }
+
+    try {
+      Files.deleteIfExists(Paths.get(GOODLINKS_PATH));
+    } catch (NoSuchFileException e) {
+      System.out.println("No such file/directory exists");
+    } catch (DirectoryNotEmptyException e) {
+      System.out.println("Directory is not empty.");
+    } catch (IOException e) {
+      System.out.println("Invalid permissions.");
+    }
+  }
+
+  @Test
+  @DisplayName("Tests passing an argument to run()")
+  void testRunSingleArg() {
+    cleanStorage();
+
+    String[] args = {URL};
+    EmailFinder.main(args);
+
+    File file1 = new File(BADLINKS_PATH);
+    File file2 = new File(GOODLINKS_PATH);
+    File file3 = new File(EMAIL_PATH);
+
+    assertAll(
+      () -> assertTrue(file1.exists(), BADLINKS_PATH + " not found"),
+      () -> assertTrue(file2.exists(), GOODLINKS_PATH + " not found"),
+      () -> assertTrue(file3.exists(), EMAIL_PATH + " not found")
+    );
+  }
+
+  @Test
+  @DisplayName("Tests passing multiple arguments to run()")
+  void testRunMultipleArgs() {
+    cleanStorage();
+
+    String[] args = {URL, "1"};
+    EmailFinder.main(args);
+
+    File file1 = new File(BADLINKS_PATH);
+    File file2 = new File(GOODLINKS_PATH);
+    File file3 = new File(EMAIL_PATH);
+
+    assertAll(
+      () -> assertTrue(file1.exists(), BADLINKS_PATH + " not found"),
+      () -> assertTrue(file2.exists(), GOODLINKS_PATH + " not found"),
+      () -> assertTrue(file3.exists(), EMAIL_PATH + " not found")
+    );
+  }
+
+  @Test
+  @DisplayName("Tests passing no arguments to run()")
+  void testRunNoArgs() {
+    cleanStorage();
+
+    String[] args = {};
+    EmailFinder.main(args);
+
+    File file1 = new File(BADLINKS_PATH);
+    File file2 = new File(GOODLINKS_PATH);
+    File file3 = new File(EMAIL_PATH);
+
+    assertAll(
+      () -> assertFalse(file1.exists(), BADLINKS_PATH + " not found"),
+      () -> assertFalse(file2.exists(), GOODLINKS_PATH + " not found"),
+      () -> assertFalse(file3.exists(), EMAIL_PATH + " not found")
+    );
+  }
+
   @Test
   @DisplayName("Tests for output file creation")
   void testOutputFile() {
+    cleanStorage();
+
     EmailFinder finder = new EmailFinder();
-    String[] args = {"file:///C:/Users/Joey/Documents/GitHub/email-finder/src/test/resources/test-1.html"};
+    String[] args = {URL};
     finder.run(args);
+    File file1 = new File(BADLINKS_PATH);
+    File file2 = new File(GOODLINKS_PATH);
+    File file3 = new File(EMAIL_PATH);
+
+    assertAll(
+      () -> assertTrue(file1.exists(), BADLINKS_PATH + " not found"),
+      () -> assertTrue(file2.exists(), GOODLINKS_PATH + " not found"),
+      () -> assertTrue(file3.exists(), EMAIL_PATH + " not found")
+    );
   }
 
 }

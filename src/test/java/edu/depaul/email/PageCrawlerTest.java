@@ -11,7 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -95,8 +97,80 @@ class PageCrawlerTest {
       List<String> content = Files.readAllLines(Paths.get(BADLINKS_PATH), StandardCharsets.US_ASCII);
       assertEquals(expected, content);
     } catch (IOException e) {
-      System.out.println("No such file/directory exists");
+      fail("Output file was not found");
     }
+  }
+
+  @Test
+  @DisplayName("Tests bad link detection via getBadLinks().")
+  void testCrawlBadLinksGet() {
+    cleanStorage();
+    StorageService storage = makeStorage();
+    PageCrawler crawler = new PageCrawler(storage);
+
+    String url = "http://something.com";  // URL does not exist
+    crawler.crawl(url);
+    crawler.report();
+
+    Set<String> expected = new HashSet<String>();
+    expected.add(url);
+
+    Set<String> actual = crawler.getBadLinks();
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Tests email detection.")
+  void testCrawlEmails() {
+    cleanStorage();
+    StorageService storage = makeStorage();
+    PageCrawler crawler = new PageCrawler(storage);
+
+    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-4.html";
+    crawler.crawl(url);
+    crawler.report();
+
+    String email1 = "foo@gmail.com";
+    String email2 = "bar@gmail.com";
+    String email3 = "baz@gmail.com";
+
+    // Construct list of expected emails in stack order (last first)
+    List<String> expected = new ArrayList<String>();
+    expected.add(email3);
+    expected.add(email2);
+    expected.add(email1);
+
+    try {
+      List<String> content = Files.readAllLines(Paths.get(EMAIL_PATH), StandardCharsets.US_ASCII);
+      assertEquals(expected, content);
+    } catch (IOException e) {
+      fail("Output file was not found");
+    }
+  }
+
+  @Test
+  @DisplayName("Tests email detection via getBadLinks().")
+  void testCrawlEmailsGet() {
+    cleanStorage();
+    StorageService storage = makeStorage();
+    PageCrawler crawler = new PageCrawler(storage);
+
+    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-4.html";
+    crawler.crawl(url);
+    crawler.report();
+
+    String email1 = "foo@gmail.com";
+    String email2 = "bar@gmail.com";
+    String email3 = "baz@gmail.com";
+
+    // Construct list of expected emails in stack order (last first)
+    Set<String> expected = new HashSet<String>();
+    expected.add(email3);
+    expected.add(email2);
+    expected.add(email1);
+
+    Set<String> actual = crawler.getEmails();
+    assertEquals(expected, actual);
   }
 
   @Test
@@ -106,7 +180,7 @@ class PageCrawlerTest {
     StorageService storage = makeStorage();
     PageCrawler crawler = new PageCrawler(storage);
 
-    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-1.html";
+    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-1.html";
     crawler.crawl(url);
     crawler.report();
 
@@ -117,8 +191,44 @@ class PageCrawlerTest {
       List<String> content = Files.readAllLines(Paths.get(GOODLINKS_PATH), StandardCharsets.US_ASCII);
       assertEquals(expected, content);
     } catch (IOException e) {
-      System.out.println("No such file/directory exists");
+      fail("Output file was not found");
     }
+  }
+
+  @Test
+  @DisplayName("Tests bad link detection via getBadLinks().")
+  void testCrawlGoodLinksGet() {
+    cleanStorage();
+    StorageService storage = makeStorage();
+    PageCrawler crawler = new PageCrawler(storage);
+
+    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-1.html";
+    crawler.crawl(url);
+    crawler.report();
+
+    Set<String> expected = new HashSet<String>();
+    expected.add(url);
+
+    Set<String> actual = crawler.getGoodLinks();
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  @DisplayName("Tests email detection upon exceeding maximum email count.")
+  void testMaximumEmails() {
+    int maxEmails = 1;
+
+    cleanStorage();
+    StorageService storage = makeStorage();
+    PageCrawler crawler = new PageCrawler(storage, maxEmails);
+
+    // test-5.html contains one email address, and links to test-6.html, which contains one more email
+    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-5.html";
+    crawler.crawl(url);
+    crawler.report();
+
+    Set<String> content = crawler.getEmails();
+    assertEquals(maxEmails, content.size());
   }
 
   @Test

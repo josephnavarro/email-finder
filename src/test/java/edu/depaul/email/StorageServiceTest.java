@@ -82,7 +82,7 @@ class StorageServiceTest {
       List<String> content = Files.readAllLines(Paths.get(path), StandardCharsets.US_ASCII);
       assertEquals(collection, content);
     } catch (IOException e) {
-      System.out.println("No such file/directory exists");
+      fail("No such file/directory exists");
     }
 
   }
@@ -119,7 +119,7 @@ class StorageServiceTest {
       List<String> content = Files.readAllLines(Paths.get(path), StandardCharsets.US_ASCII);
       assertEquals(collection, content);
     } catch (IOException e) {
-      System.out.println("No such file/directory exists");
+      fail("No such file/directory exists");
     }
 
   }
@@ -156,7 +156,7 @@ class StorageServiceTest {
       List<String> content = Files.readAllLines(Paths.get(path), StandardCharsets.US_ASCII);
       assertEquals(collection, content);
     } catch (IOException e) {
-      System.out.println("No such file/directory exists");
+      fail("No such file/directory exists");
     }
 
   }

@@ -7,6 +7,7 @@ package edu.depaul.email;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.jsoup.nodes.Document;
 
 import static edu.depaul.email.StorageService.StorageType.EMAIL;
@@ -25,7 +26,7 @@ import static edu.depaul.email.StorageService.StorageType.BADLINKS;
  * 3. list of URLs that could not be reached
  */
 public class PageCrawler {
-  private int maxEmails= 50;
+  private int maxEmails = 50;
   private Set<String> emails = new HashSet<>();
   private PageFetcher fetcher = new PageFetcher();
   private PageParser parser = new PageParser();
@@ -45,6 +46,18 @@ public class PageCrawler {
     this.maxEmails = maxEmails;
   }
 
+  public Set<String> getEmails() {
+    return emails;
+  }
+
+  public Set<String> getGoodLinks() {
+    return goodLinks;
+  }
+
+  public Set<String> getBadLinks() {
+    return badLinks;
+  }
+
   public void crawl(String url) {
 
     if (emails.size() >= maxEmails) {
@@ -59,8 +72,8 @@ public class PageCrawler {
     }
     Document doc = null;
     try {
-       checkedUrls.add(url);
-       doc = fetcher.get(url);
+      checkedUrls.add(url);
+      doc = fetcher.get(url);
     } catch (Exception e) {
       badLinks.add(url);
       System.out.println(e.getMessage());
@@ -78,7 +91,7 @@ public class PageCrawler {
     Set<String> urls = parser.findLinks(doc);
     if (urls.size() > 0) {
       for (String newUrl : urls) {
-        if (! checkedUrls.contains((newUrl))) {
+        if (!checkedUrls.contains((newUrl))) {
           checkedUrls.add(newUrl);
           if (newUrl.startsWith("http")) {
             crawl(newUrl);
