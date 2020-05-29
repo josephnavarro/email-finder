@@ -1,4 +1,0 @@
-baz@gmail.com
-bar@gmail.com
-qux@gmail.com
-foo@gmail.com

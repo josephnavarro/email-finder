@@ -35,9 +35,11 @@ class ListWriterTest {
 
     OutputStream stream = new ByteArrayOutputStream();
     ListWriter writer = new ListWriter(stream);
+    String streamContents = stream.toString();
+
     try {
       writer.writeList(collection);
-      assertEquals(expected, stream.toString());
+      assertEquals(expected, streamContents);
     } catch (Exception err) {
       throw new EmailFinderException("Error ", err);
     }

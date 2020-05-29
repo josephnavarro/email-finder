@@ -53,6 +53,7 @@ class PageParserTest {
   }
 
   private static Stream<Arguments> provideMultipleEmails() {
+    // Dummy email addresses
     String e1 = "e1@gmail.com";
     String e2 = "e2@gmail.com";
     String e3 = "e3@gmail.com";
@@ -60,6 +61,7 @@ class PageParserTest {
     String e5 = "e5@gmail.com";
     String e6 = "e6@gmail.com";
 
+    // Basic documents with two or more email addresses
     String d2 = "<html><body>" + e1 + ", " + e2 + "</body></html>";
     String d3 = "<html><body>" + e1 + ", " + e2 + ", " + e3 + "</body></html>";
     String d4 = "<html><body>" + e1 + ", " + e2 + ", " + e3 + ", " + e4 + "</body></html>";
@@ -107,6 +109,7 @@ class PageParserTest {
   }
 
   private static Stream<Arguments> provideMultipleLinks() {
+    // Dummy links
     String a1 = "<a href='1.html'>1</a>";
     String a2 = "<a href='2.html'>2</a>";
     String a3 = "<a href='3.html'>3</a>";
@@ -114,6 +117,7 @@ class PageParserTest {
     String a5 = "<a href='5.html'>5</a>";
     String a6 = "<a href='6.html'>6</a>";
 
+    // Basic documents with two or more links
     String d2 = "<html><body>" + a1 + a2 + "</body></html>";
     String d3 = "<html><body>" + a1 + a2 + a3 + "</body></html>";
     String d4 = "<html><body>" + a1 + a2 + a3 + a4 + "</body></html>";

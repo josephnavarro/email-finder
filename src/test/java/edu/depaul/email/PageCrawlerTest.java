@@ -23,7 +23,11 @@ class PageCrawlerTest {
   private static final String BADLINKS_PATH = "src/test/resources/badlinks.txt";
   private static final String GOODLINKS_PATH = "src/test/resources/goodlinks.txt";
 
+  /**
+   *  Removes all temporary storage files (not a test).
+   */
   private void cleanStorage() {
+    // Delete email storage file
     try {
       Files.deleteIfExists(Paths.get(EMAIL_PATH));
     } catch (NoSuchFileException e) {
@@ -34,6 +38,7 @@ class PageCrawlerTest {
       System.out.println("Invalid permissions.");
     }
 
+    // Delete badlinks storage file
     try {
       Files.deleteIfExists(Paths.get(BADLINKS_PATH));
     } catch (NoSuchFileException e) {
@@ -44,6 +49,7 @@ class PageCrawlerTest {
       System.out.println("Invalid permissions.");
     }
 
+    // Delete goodlinks storage file
     try {
       Files.deleteIfExists(Paths.get(GOODLINKS_PATH));
     } catch (NoSuchFileException e) {
@@ -55,6 +61,9 @@ class PageCrawlerTest {
     }
   }
 
+  /**
+   * Instantiates an actual local StorageService.
+   */
   private StorageService makeStorage() {
     StorageService storage = new StorageService();
     storage.addLocation(StorageService.StorageType.EMAIL, EMAIL_PATH);
@@ -80,7 +89,7 @@ class PageCrawlerTest {
   }
 
   @Test
-  @DisplayName("Tests bad link detection.")
+  @DisplayName("Tests output file creation for bad link detection.")
   void testCrawlBadLinks() {
     cleanStorage();
     StorageService storage = makeStorage();
@@ -120,13 +129,13 @@ class PageCrawlerTest {
   }
 
   @Test
-  @DisplayName("Tests email detection.")
+  @DisplayName("Tests output file creation for email detection.")
   void testCrawlEmails() {
     cleanStorage();
     StorageService storage = makeStorage();
     PageCrawler crawler = new PageCrawler(storage);
 
-    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-4.html";
+    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-4.html";
     crawler.crawl(url);
     crawler.report();
 
@@ -155,7 +164,7 @@ class PageCrawlerTest {
     StorageService storage = makeStorage();
     PageCrawler crawler = new PageCrawler(storage);
 
-    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-4.html";
+    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-4.html";
     crawler.crawl(url);
     crawler.report();
 
@@ -174,13 +183,13 @@ class PageCrawlerTest {
   }
 
   @Test
-  @DisplayName("Tests good link detection.")
+  @DisplayName("Tests output file creation for good link detection.")
   void testCrawlGoodLinks() {
     cleanStorage();
     StorageService storage = makeStorage();
     PageCrawler crawler = new PageCrawler(storage);
 
-    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-1.html";
+    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-1.html";
     crawler.crawl(url);
     crawler.report();
 
@@ -202,7 +211,7 @@ class PageCrawlerTest {
     StorageService storage = makeStorage();
     PageCrawler crawler = new PageCrawler(storage);
 
-    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-1.html";
+    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-1.html";
     crawler.crawl(url);
     crawler.report();
 
@@ -214,7 +223,7 @@ class PageCrawlerTest {
   }
 
   @Test
-  @DisplayName("Tests email detection upon exceeding maximum email count.")
+  @DisplayName("Tests email detection handling when exceeding maximum email count.")
   void testMaximumEmails() {
     int maxEmails = 1;
 
@@ -222,8 +231,8 @@ class PageCrawlerTest {
     StorageService storage = makeStorage();
     PageCrawler crawler = new PageCrawler(storage, maxEmails);
 
-    // test-5.html contains one email address, and links to test-6.html, which contains one more email
-    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-5.html";
+    // test-5.html contains one email address and links to test-6.html, which contains one more email
+    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-5.html";
     crawler.crawl(url);
     crawler.report();
 
@@ -239,7 +248,7 @@ class PageCrawlerTest {
     PageCrawler crawler = new PageCrawler(storage);
 
     // `test-2.html` links to `test-3.html`, which links back to `test-2.html`
-    String url = "C:\\Users\\Joey\\Documents\\GitHub\\email-finder\\src\\test\\resources\\test-2.html";
+    String url = System.getProperty("user.dir") + "\\src\\test\\resources\\test-2.html";
     crawler.crawl(url);
   }
 }

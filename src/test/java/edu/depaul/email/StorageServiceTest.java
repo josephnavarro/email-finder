@@ -28,7 +28,6 @@ class StorageServiceTest {
   void testNoEmailLocation() {
     StorageService storage = new StorageService();
     Collection<String> collection = new ArrayList<String>();
-
     assertThrows(EmailFinderException.class, () -> storage.storeList(StorageService.StorageType.EMAIL, collection));
   }
 
@@ -37,7 +36,6 @@ class StorageServiceTest {
   void testNoBadLinksLocation() {
     StorageService storage = new StorageService();
     Collection<String> collection = new ArrayList<String>();
-
     assertThrows(EmailFinderException.class, () -> storage.storeList(StorageService.StorageType.BADLINKS, collection));
   }
 
