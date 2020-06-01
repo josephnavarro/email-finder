@@ -16,6 +16,7 @@
         <include>target/surefire-reports/*.txt</include>
         <include>target/site/jacoco/**/*</include>
         <include>pom.xml</include>
+        <include>target/spotbugs*.xml</include>
       </includes>
       <useDefaultExcludes>true</useDefaultExcludes>
     </fileSet>

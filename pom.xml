@@ -72,6 +72,7 @@
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>4.0.0</version>
         <configuration>
+          <failOnError>false</failOnError>
           <effort>Max</effort>
           <threshold>Low</threshold>
           <xmlOutput>true</xmlOutput>
@@ -129,10 +130,6 @@
           <descriptors>
             <descriptor>src/assembly/assembly.xml</descriptor>
           </descriptors>
-          <descriptorRefs>
-            <descriptorRef>src</descriptorRef>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
           <archive>
             <manifest>
               <mainClass>edu.depaul.email.EmailFinder</mainClass>
@@ -142,7 +139,7 @@
         <executions>
           <execution>
             <id>make-assembly</id>
-            <phase>package</phase>
+            <phase>verify</phase>
             <goals>
               <goal>single</goal>
             </goals>
