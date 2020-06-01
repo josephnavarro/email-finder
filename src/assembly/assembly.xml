@@ -11,6 +11,7 @@
       <directory>${project.basedir}</directory>
       <includes>
         <include>src/**/*.java</include>
+        <include>src/test/**/*</include>
         <include>src/assembly/*.*</include>
         <include>lib/*.jar</include>
         <include>target/surefire-reports/*.txt</include>
